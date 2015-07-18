@@ -1,0 +1,9 @@
+[run]
+source = bssrdf_estimate
+omit =
+  */python?.?/*
+  */lib-python/?.?/*.py
+  */lib_pypy/*.py
+  */site-packages/ordereddict.py
+  */site-packages/nose/*
+  */unittest2/*
