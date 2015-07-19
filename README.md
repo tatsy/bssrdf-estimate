@@ -18,8 +18,8 @@ pip install -r requirements.txt
 
 * Please make that sure Qt5 is installed to your system and that path/to/qmake is added to environment PATH.
 * Access [http://www.riverbankcomputing.co.uk/software/pyqt/download5](http://www.riverbankcomputing.co.uk/software/pyqt/download5) and download SIP and PyQt5 packages.
-* Build SIP with ```make & make install```.
-* Finally, build PyQt5 with ```make & make install```.
+* Build SIP with ```python configure.py & make & make install```.
+* Finally, build PyQt5 with ```python configure.py & make & make install```.
 
 #### 3. Install this package
 
