@@ -1,3 +1,4 @@
-[submodule "submodule/spica"]
-	path = submodule/spica
+[submodule "submodules/spica"]
+	path = submodules/spica
 	url = https://github.com/tatsy/spica.git
+	branch = develop

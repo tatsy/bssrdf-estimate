@@ -27,7 +27,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY})
 
 # Add spica libraries
-set(spica_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/submodule/spica/include/")
+set(spica_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/submodules/spica/include/")
 set(spica_LIBS "${LIB_PREFIX}spica_renderer${LIB_SUFFIX}")
 set(spica_DEBUG_LIBS "${LIB_PREFIX}spica_renderer${LIB_SUFFIX}")
 
@@ -47,5 +47,5 @@ if (NOT MSVC)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O2")
 endif()
 
-add_subdirectory(submodule)
+add_subdirectory(submodules)
 add_subdirectory(native)
