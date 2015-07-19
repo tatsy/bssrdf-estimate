@@ -6,7 +6,7 @@ python:
 sudo: true
 
 git:
-  submodule: false
+  submodules: false
 
 before_install:
   # Update submodule
