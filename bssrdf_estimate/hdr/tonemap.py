@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
+import math
 import numpy as np
 from itertools import product
 
-from luminance import luminance
+from .luminance import luminance
 
 def tonemap(image):
     if image.ndim != 3:
@@ -25,11 +26,5 @@ def tonemap(image):
     Lw_bar = math.exp(Lw_bar / (width * height))
     L_white2 = L_white * L_white
 
-    ret = np.zeros(image.shape)
-    for y, x in product(range(height), range(width)):
-        c = image[y,x,:]
-        r = c[0] * (1.0 + c[0] / L_white2) / (1.0 + c[0])
-        g = c[1] * (1.0 + c[1] / L_white2) / (1.0 + c[1])
-        b = c[2] * (1.0 + c[2] / L_white2) / (1.0 + c[2])
-        ret[y,x,:] = (r, g, b)
+    ret = image * (1.0 + image / L_white2) / (1.0 + image)
     return image

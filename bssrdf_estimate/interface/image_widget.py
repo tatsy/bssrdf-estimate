@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import numpy as np
+
 from itertools import product
 
 from PyQt5.QtCore import *
@@ -26,6 +28,8 @@ class ImageWidget(QWidget):
         self.pixmap = None
 
     def showImage(self, image):
+        if isinstance(image, np.ndarray):
+            image = self.numpy2qimage(image)
         self.pixmap = QPixmap(QPixmap.fromImage(image))
         self.imageLabel.setPixmap(self.pixmap)
         self.show()
@@ -59,3 +63,12 @@ class ImageWidget(QWidget):
             ev.ignore()
             return True
         return False
+
+    @classmethod
+    def numpy2qimage(cls, image):
+        w = image.shape[1]
+        h = image.shape[0]
+        temp = (image * 255.0)
+        temp[np.where(temp > 255.0)] = 255.0
+        ret = QImage(temp.astype('int8'), w, h, QImage.Format_RGB888)
+        return ret

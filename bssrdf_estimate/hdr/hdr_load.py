@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
 
+import re
+import math
+import numpy as np
+
+from itertools import product
+
 HDR_NONE = 0
 HDR_RLE_RGBE_32 = 1
 
@@ -7,7 +13,7 @@ def hdr_load(filename):
     img = None
     with open(filename, 'rb') as fp:
         bufsize = 4096
-        filetype = HDRImage.HDR_NONE
+        filetype = HDR_NONE
         isvalid = False
         exposure = 1.0
 
@@ -21,7 +27,7 @@ def hdr_load(filename):
                 m = p.match(buf)
                 if m is not None:
                     if m.group(1) == '32-bit_rle_rgbe':
-                        filetype = HDRImage.HDR_RLE_RGBE_32
+                        filetype = HDR_RLE_RGBE_32
 
                 p = re.compile('EXPOSURE=(.*)')
                 m = p.match(buf)
@@ -74,9 +80,9 @@ def hdr_load(filename):
 
                 info = ord(fp.read(1))
                 if info <= 128:
+                    data = fp.read(info)
                     for i in range(info):
-                        data = ord(fp.read(1))
-                        tmp_data[(nowy * width + nowx) * 4 + nowvalue] = data
+                        tmp_data[(nowy * width + nowx) * 4 + nowvalue] = data[i]
                         nowx += 1
                 else:
                     num = info - 128
@@ -93,7 +99,7 @@ def hdr_load(filename):
             r = tmp_data[(y * width + x) * 4 + 0] * math.pow(2.0, e - 128.0) / 256.0
             g = tmp_data[(y * width + x) * 4 + 1] * math.pow(2.0, e - 128.0) / 256.0
             b = tmp_data[(y * width + x) * 4 + 2] * math.pow(2.0, e - 128.0) / 256.0
-            img[y, x, :] = (r, g, b)
+            img[y,x,:] = (r, g, b)
 
     if img is None:
         raise Exception('Invalid HDR format')
