@@ -27,3 +27,4 @@ if (NOT MSVC)
 endif()
 
 add_subdirectory(submodule)
+add_subdirectory(native)
