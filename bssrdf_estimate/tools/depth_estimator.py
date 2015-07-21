@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import sys
 import math
-from optparse import OptionParser
 
 import numpy as np
 import scipy as sp
@@ -9,8 +8,6 @@ import scipy.misc
 import matplotlib.pyplot as plt
 
 from itertools import product
-
-from utils import HDRImage
 
 EPS = 1.0e-8
 PIXEL_MASKED = 1
@@ -149,26 +146,3 @@ class DepthEstimator(object):
 
         siz = width * height
         return sp.sparse.csr_matrix((vals, (rows, cols)), shape=(siz, siz))
-
-def main(argv):
-    parser = OptionParser()
-    parser.add_option('-i', '--image', action='store', type='string', dest='input')
-    parser.add_option('-m', '--mask',  action='store', type='string', dest='mask')
-
-    opts, args = parser.parse_args()
-
-    if opts.input is None or opts.mask is None:
-        parser.print_help()
-        sys.exit(1)
-
-    img  = HDRImage.load(opts.input)
-    mask = sp.misc.imread(opts.mask, flatten=True)
-    mask[np.where(mask < 128)] = 0
-    mask[np.where(mask >= 128)] = 1
-
-    de = DepthEstimator(img, mask)
-    de.process()
-    de.save_mesh('depth_mesh.obj')
-
-if __name__ == '__main__':
-    main(sys.argv)

@@ -7,6 +7,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 from .. import hdr
+from .. import tools
 from .control_widget import ControlWidget
 from .image_widget import ImageWidget
 
@@ -29,9 +30,12 @@ class MainWindow(QWidget):
         self.boxLayout.addWidget(self.controlWidget)
         self.setLayout(self.boxLayout)
 
+        self.project = None
+
     def setSignalSlots(self):
         self.tabWidgets.tabCloseRequested.connect(self.closeTabRequested)
         self.controlWidget.loadPushButton.clicked.connect(self.loadPushButtonClicked)
+        self.controlWidget.estimatePushButton.clicked.connect(self.estimatePushButtonClicked)
 
     @classmethod
     def rememberLastOpenedDirectory(cls, filename):
@@ -52,19 +56,34 @@ class MainWindow(QWidget):
 
     def loadPushButtonClicked(self):
         lastOpenedDir = self.getLastOpenedDirectory()
-        filename = QFileDialog.getOpenFileName(self, 'Open HDR', lastOpenedDir, 'HDR (*.hdr)')[0]
+        filename = QFileDialog.getOpenFileName(self, 'Open project XML', lastOpenedDir, 'Project XML (*.xml)')[0]
         if filename == "":
             return
 
         self.rememberLastOpenedDirectory(filename)
 
         _, ext = os.path.splitext(filename)
-        if ext == '.hdr':
-            img = hdr.load(filename)
-            img = hdr.tonemap(img)
-        else:
-            img = sp.misc.imread(filename)
+        if ext == '.xml':
+            self.project = tools.Project(filename)
 
         imgWidget = ImageWidget()
-        imgWidget.showImage(img)
+        imgWidget.showImage(self.project.image)
         self.tabWidgets.addTab(imgWidget, os.path.basename(filename))
+        maskWidget = ImageWidget()
+        maskWidget.showImage(self.project.mask)
+        self.tabWidgets.addTab(maskWidget, 'Mask')
+
+    def estimatePushButtonClicked(self):
+        if self.project is None:
+            self.showMessageBox('Load project first!')
+            return
+
+        de = tools.DepthEstimator(self.project.image, self.project.mask)
+        de.process()
+        de.save_mesh('depth_mesh.obj')
+
+    @classmethod
+    def showMessageBox(cls, msg):
+        msgbox = QMessageBox()
+        msgbox.setText(msg)
+        msgbox.exec_()

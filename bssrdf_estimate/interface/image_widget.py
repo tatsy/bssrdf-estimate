@@ -8,6 +8,8 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
+import matplotlib.pyplot as plt
+
 class ImageWidget(QWidget):
     def __init__(self, parent=None):
         super(ImageWidget, self).__init__(parent)
@@ -68,7 +70,15 @@ class ImageWidget(QWidget):
     def numpy2qimage(cls, image):
         w = image.shape[1]
         h = image.shape[0]
-        temp = (image * 255.0)
-        temp[np.where(temp > 255.0)] = 255.0
-        ret = QImage(temp.astype('int8'), w, h, QImage.Format_RGB888)
+        ret = QImage(w, h, QImage.Format_RGB888)
+        for y, x in product(range(h), range(w)):
+            if image.ndim == 3:
+                c = image[y,x,:]
+                r = int(min(c[0], 1.0) * 255.0)
+                g = int(min(c[1], 1.0) * 255.0)
+                b = int(min(c[2], 1.0) * 255.0)
+                ret.setPixel(x, y, qRgb(r, g, b))
+            else:
+                c = int(min(image[y, x], 1.0) * 255.0)
+                ret.setPixel(x, y, qRgb(c, c, c))
         return ret

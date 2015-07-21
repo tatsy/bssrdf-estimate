@@ -10,6 +10,10 @@ class ControlWidget(QWidget):
         self.loadPushButton = QPushButton()
         self.loadPushButton.setText('Load')
 
+        self.estimatePushButton = QPushButton()
+        self.estimatePushButton.setText('Estimate')
+
         self.boxLayout = QVBoxLayout()
         self.boxLayout.addWidget(self.loadPushButton)
+        self.boxLayout.addWidget(self.estimatePushButton)
         self.setLayout(self.boxLayout)
