@@ -4,13 +4,18 @@ from setuptools import setup, Extension
 from setuptools.command.install import install as inst
 
 numpy_include_dir = os.path.join(site.getsitepackages()[1], 'numpy/core/include')
+print('numpy dir: %s' % numpy_include_dir)
 
-module = Extension('bssrdf_estimate.render',
-                   ['native/bssrdf_render.cc'],
-                   include_dirs=['submodules/spica/include', numpy_include_dir],
-                   library_dirs=['build/lib'],
-                   libraries=['spica_renderer']
-                   )
+render_module = Extension('bssrdf_estimate.render',
+                           ['native/bssrdf_render.cc'],
+                           include_dirs=['submodules/spica/include', numpy_include_dir],
+                           library_dirs=['build/lib'],
+                           libraries=['spica_renderer']
+                           )
+filter_module = Extension('bssrdf_estimate.imfilter.imfilter',
+                          ['native/bssrdf_filter.cc'],
+                          include_dirs=[numpy_include_dir],
+                          )
 
 class install(inst):
     def run(self):
@@ -25,7 +30,7 @@ setup(
     url='https://github.com/tatsy/bssrdf-estimate.git',
     description='Implementation of "BSSRDF Estimation from Single Images by Munoz et al. (Eurographics 2011)"',
     license='MIT',
-    ext_modules=[module],
+    ext_modules=[filter_module, render_module],
     classifiers=[
         'Development Status :: 1 - Planning',
         'Programming Language :: Python :: 3',
