@@ -82,6 +82,9 @@ class MainWindow(QWidget):
         de.process()
         de.save_mesh('depth_mesh.obj')
 
+        le = tools.LightEstimator()
+        le.process(self.project.image, self.project.mask)
+
     @classmethod
     def showMessageBox(cls, msg):
         msgbox = QMessageBox()

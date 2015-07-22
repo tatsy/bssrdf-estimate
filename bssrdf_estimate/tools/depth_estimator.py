@@ -43,7 +43,7 @@ class DepthEstimator(object):
 
         # Invert sigmoidal compression in Eq.11 of [Khan et al. 2006]
         self.depth = np.zeros((height, width))
-        dscale = min(width, height) * 0.01
+        dscale = (width + height) / 2.0
         for y, x in product(range(height), range(width)):
             if self.mask[y, x] == PIXEL_MASKED:
                 d = luminance[y, x]
@@ -118,6 +118,7 @@ class DepthEstimator(object):
                     sumD += d2 - d1
                     sumW += 1.0
                 self.depth[y, x] += 0.5 * sumD / (sumW + EPS)
+        print('')
 
     @classmethod
     def _reshape(cls, x, d=0):
@@ -125,7 +126,6 @@ class DepthEstimator(object):
             return (3.0 + (-6.0 + 4.0 * x) * x) * x
         else:
             return cls._reshape(cls._reshape(x, d-1))
-
 
     def _make_laplacian(self, width, height):
         rows = []

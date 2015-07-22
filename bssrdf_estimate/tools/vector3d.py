@@ -17,3 +17,6 @@ class Vector3D(object):
     @property
     def z(self):
         return self._z
+
+    def dot(self, v):
+        return self._x * v.x + self._y * v.y + self._z * v.z
