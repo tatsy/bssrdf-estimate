@@ -5,7 +5,6 @@ import math
 import numpy as np
 import scipy as sp
 import scipy.misc
-import matplotlib.pyplot as plt
 
 from itertools import product
 
@@ -102,7 +101,7 @@ class DepthEstimator(object):
 
         dx = [-1, 1, 0, 0]
         dy = [0, 0, -1, 1]
-        print('Gauss Seidel', end='')
+        print('Gauss Seidel ', end='')
         for t in range(20):
             print('.', end='')
             for y, x in product(range(1, height-1), range(1, width-1)):

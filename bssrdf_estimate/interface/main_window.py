@@ -10,6 +10,7 @@ from .. import hdr
 from .. import tools
 from .control_widget import ControlWidget
 from .image_widget import ImageWidget
+from .curve_plot_widget import CurvePlotWidget
 
 config_file = 'config.ini'
 
@@ -84,6 +85,13 @@ class MainWindow(QWidget):
 
         le = tools.LightEstimator()
         le.process(self.project.image, self.project.mask)
+
+        be = tools.BSSRDFEstimator()
+        be.process(self.project.image, self.project.mask, de.depth, le.lights)
+
+        cpw = CurvePlotWidget()
+        cpw.setCurveData(be.Rd)
+        self.tabWidgets.addTab(cpw, 'Curve')
 
     @classmethod
     def showMessageBox(cls, msg):
