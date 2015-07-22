@@ -2,3 +2,8 @@
 build/*
 dist/*
 *.egg-info/*
+
+*.obj
+*.bmp
+*.dll
+*.pyd

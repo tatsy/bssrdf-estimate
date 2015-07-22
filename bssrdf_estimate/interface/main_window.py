@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import numpy as np
 
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
@@ -11,6 +12,7 @@ from .. import tools
 from .control_widget import ControlWidget
 from .image_widget import ImageWidget
 from .curve_plot_widget import CurvePlotWidget
+from ..render import render
 
 config_file = 'config.ini'
 
@@ -18,17 +20,24 @@ class MainWindow(QWidget):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
         self.setWindowTitle('BSSRDF Estimate')
+        self.boxLayout = QHBoxLayout()
+        self.setFont(QFont('Meiryo UI'))
 
         self.tabWidgets = QTabWidget()
         self.tabWidgets.setTabsClosable(True)
+        sizeForTabs = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizeForTabs.setHorizontalStretch(5)
+        self.tabWidgets.setSizePolicy(sizeForTabs)
+        self.boxLayout.addWidget(self.tabWidgets)
 
         self.controlWidget = ControlWidget()
+        sizeForControls = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizeForControls.setHorizontalStretch(1)
+        self.controlWidget.setSizePolicy(sizeForControls)
+        self.boxLayout.addWidget(self.controlWidget)
 
         self.setSignalSlots()
 
-        self.boxLayout = QHBoxLayout()
-        self.boxLayout.addWidget(self.tabWidgets)
-        self.boxLayout.addWidget(self.controlWidget)
         self.setLayout(self.boxLayout)
 
         self.project = None
@@ -37,6 +46,7 @@ class MainWindow(QWidget):
         self.tabWidgets.tabCloseRequested.connect(self.closeTabRequested)
         self.controlWidget.loadPushButton.clicked.connect(self.loadPushButtonClicked)
         self.controlWidget.estimatePushButton.clicked.connect(self.estimatePushButtonClicked)
+        self.controlWidget.renderPushButton.clicked.connect(self.renderPushButtonClicked)
 
     @classmethod
     def rememberLastOpenedDirectory(cls, filename):
@@ -92,6 +102,20 @@ class MainWindow(QWidget):
         cpw = CurvePlotWidget()
         cpw.setCurveData(be.Rd)
         self.tabWidgets.addTab(cpw, 'Curve')
+
+        self.Rd_distances = np.array(be.Rd[0][0], dtype='float32')
+        self.Rd_colors = np.zeros((self.Rd_distances.size, 3), dtype='float32')
+        for c in range(3):
+            self.Rd_colors[:,c] = np.array(be.Rd[c][1])
+
+    def renderPushButtonClicked(self):
+        w = self.controlWidget.getWidthValue()
+        h = self.controlWidget.getHeightValue()
+        spp = self.controlWidget.getSamplePerPixel()
+        photons = self.controlWidget.getNumberOfPhotons()
+        scale = self.controlWidget.getScale()
+
+        render(w, h, spp, photons, scale, self.Rd_distances, self.Rd_colors)
 
     @classmethod
     def showMessageBox(cls, msg):
