@@ -1,20 +1,29 @@
 import os
 import site
+import platform
 from setuptools import setup, Extension
 from setuptools.command.install import install as inst
 
-numpy_include_dir = os.path.join(site.getsitepackages()[1], 'numpy/core/include')
-print('numpy dir: %s' % numpy_include_dir)
+print(platform.platform())
+print(site.getsitepackages())
+print(site.getusersitepackages())
+
+include_dirs = [os.path.join(d, 'numpy/core/include') for d in site.getsitepackages()]
+include_dirs.append('submodules/spica/include')
 
 render_module = Extension('bssrdf_estimate.render',
-                           ['native/bssrdf_render.cc'],
-                           include_dirs=['submodules/spica/include', numpy_include_dir],
-                           library_dirs=['build/lib'],
-                           libraries=['spica_renderer']
-                           )
+                          sources=['native/bssrdf_render.cc'],
+                          language='c++',
+                          include_dirs=include_dirs,
+                          library_dirs=['build/lib'],
+                          libraries=['spica_renderer'],
+                          extra_compile_args=['-std=c++11']
+                          )
 filter_module = Extension('bssrdf_estimate.imfilter.imfilter',
-                          ['native/bssrdf_filter.cc'],
-                          include_dirs=[numpy_include_dir],
+                          sources=['native/bssrdf_filter.cc'],
+                          language='c++',
+                          include_dirs=include_dirs,
+                          extra_compile_args=['-std=c++11']
                           )
 
 class install(inst):
