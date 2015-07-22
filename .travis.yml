@@ -1,7 +1,6 @@
 language: python
 
 python:
-  - "3.3"
   - "3.4"
 
 sudo: true
@@ -74,11 +73,11 @@ before_install:
   - sudo ln -s /run/shm /dev/shm
 
   # Install cvxopt
-  - wget http://abel.ee.ucla.edu/src/cvxopt-1.1.5.tar.gz
-  - tar xf cvxopt-1.1.5.tar.gz
-  - cd cvxopt-1.1.5
-  - python setup.py install
-  - cd ..
+  - conda install --yes python=$TRAVIS_PYTHON_VERSION setuptools pillow numpy scipy matplotlib nose dateutil pyparsing dateutil
+  - conda install --yes -c dan_blanchard python-coveralls
+  - sudo apt-get install -qq liblapack-dev libblas-dev
+  - pip --version
+  - pip install cvxopt
 
 install:
   # Build spica
@@ -86,8 +85,6 @@ install:
   - cmake --build .
 
   # Build
-  - conda install --yes python=$TRAVIS_PYTHON_VERSION setuptools pillow numpy scipy matplotlib nose dateutil pyparsing dateutil
-  - conda install --yes -c dan_blanchard python-coveralls
   - python setup.py install
 
 script:
