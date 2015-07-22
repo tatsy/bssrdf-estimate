@@ -89,7 +89,7 @@ class MainWindow(QWidget):
             self.showMessageBox('Load project first!')
             return
 
-        de = tools.DepthEstimator(self.project.image, self.project.mask)
+        de = tools.DepthEstimator(self.project.hdr, self.project.mask)
         de.process()
         de.save_mesh('depth_mesh.obj')
 

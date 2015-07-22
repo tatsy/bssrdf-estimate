@@ -7,3 +7,4 @@ dist/*
 *.bmp
 *.dll
 *.pyd
+*.ini

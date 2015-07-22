@@ -7,6 +7,10 @@ from itertools import product
 from .luminance import luminance
 
 def tonemap(image):
+    '''
+    Tone mapping with [Reinhard 2002]
+    '''
+
     if image.ndim != 3:
         raise Exception('Image dimension invalid')
 
@@ -18,13 +22,11 @@ def tonemap(image):
 
     Lw_bar = 0.0
     L_white = 0.0
-    for y, x in product(range(height), range(width)):
-        c = image[y,x,:]
-        l = luminance(c[0], c[1], c[2])
-        Lw_bar += math.log(l + delta)
-        L_white = max(l, L_white)
-    Lw_bar = math.exp(Lw_bar / (width * height))
-    L_white2 = L_white * L_white
 
-    ret = image * (1.0 + image / L_white2) / (1.0 + image)
-    return image
+    lum = image[:,:,0] * 0.2126 + image[:,:,1] * 0.7152 + image[:,:,2] * 0.0722
+    lw_bar = math.exp(np.log(lum + delta).sum() / lum.size)
+    l_white2 = lum.max() ** 2.0
+
+    ret = image * a / lw_bar
+    ret = ret * (1.0 + ret / l_white2) / (1.0 + ret)
+    return ret
