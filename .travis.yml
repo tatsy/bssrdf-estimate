@@ -1,6 +1,7 @@
 language: python
 
 python:
+  - "3.3"
   - "3.4"
 
 sudo: true
@@ -69,7 +70,7 @@ install:
   # Build spica
   - cmake -DCMAKE_PREFIX_PATH=/opt/qt54/lib/cmake -DENABLE_AVX=OFF -DSPICA_BUILD_EXAMPLE=OFF -DSPICA_BUILD_TEST=OFF -DSPICA_BUILD_VIEWER=OFF .
   - cmake --build .
-  
+
   # Build
   - conda install --yes python=$TRAVIS_PYTHON_VERSION setuptools pillow numpy scipy matplotlib nose dateutil pyparsing dateutil
   - conda install --yes -c dan_blanchard python-coveralls

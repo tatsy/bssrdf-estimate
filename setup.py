@@ -1,9 +1,13 @@
+import os
+import site
 from setuptools import setup, Extension
 from setuptools.command.install import install as inst
 
+numpy_include_dir = os.path.join(site.getsitepackages()[1], 'numpy/core/include')
+
 module = Extension('bssrdf_estimate.render',
                    ['native/bssrdf_render.cc'],
-                   include_dirs=['submodules/spica/include', 'C:/Python34/Lib/site-packages/numpy/core/include'],
+                   include_dirs=['submodules/spica/include', numpy_include_dir],
                    library_dirs=['build/lib'],
                    libraries=['spica_renderer']
                    )
