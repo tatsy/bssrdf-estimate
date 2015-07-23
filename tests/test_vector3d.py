@@ -5,7 +5,7 @@ try:
 except:
     import unittest
 
-from bssrdf_estimate import *
+from bssrdf_estimate.tools import Vector3D
 
 class Vector3DTest(unittest.TestCase):
     def test_instance(self):

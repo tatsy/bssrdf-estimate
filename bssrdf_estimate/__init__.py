@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from .tools import *
-from .interface import *
+from .hdr import __init__ as hdr
+from .tools import __init__ as tools
+from .interface import __init__ as interface
