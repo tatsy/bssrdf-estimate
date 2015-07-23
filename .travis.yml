@@ -104,6 +104,7 @@ install:
 
   # Build
   - python setup.py install
+  - ls -l bssrdf_estimate
 
 script:
   - nosetests --nocapture --with-coverage --cover-package=bssrdf_estimate --logging-level=INFO
