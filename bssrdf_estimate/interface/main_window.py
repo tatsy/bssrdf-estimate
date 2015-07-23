@@ -7,10 +7,10 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-from bssrdf_estimate import hdr
-from bssrdf_estimate import tools
-from bssrdf_estimate.render import render
+import bssrdf_estimate.hdr as hdr
+import bssrdf_estimate.tools as tools
 from bssrdf_estimate.interface import *
+from bssrdf_estimate.render import render
 
 config_file = 'config.ini'
 
