@@ -68,7 +68,7 @@ static PyObject* bilateral_filter(PyObject* self, PyObject* args) {
 
                         const double wgt = wgt_s * wgt_c;
                         for (int d = 0; d < dim; d++) {
-                            sumCol[d] += wgt * imdata[(y * width + x) * dim + d];
+                            sumCol[d] += wgt * imdata[(ny * width + nx) * dim + d];
                         }
                         sumWgt += wgt;
                     }

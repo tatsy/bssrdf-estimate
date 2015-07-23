@@ -91,7 +91,6 @@ class MainWindow(QWidget):
 
         _, ext = os.path.splitext(filename)
         if ext == '.xml':
-            print(tools)
             self.project = tools.Project(filename)
 
         imgWidget = ImageWidget()

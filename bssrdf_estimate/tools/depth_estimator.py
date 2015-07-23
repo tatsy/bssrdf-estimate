@@ -42,7 +42,7 @@ class DepthEstimator(object):
 
         # Apply bilateral filter
         for it in range(10):
-            luminance = imfilter.bilateral_filter(luminance, 10.0, 1.0, 15)
+            luminance = imfilter.bilateral_filter(luminance, 5.0, 1.0, 15)
 
         # Invert sigmoidal compression in Eq.11 of [Khan et al. 2006]
         self.depth = np.zeros((height, width))
