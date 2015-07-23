@@ -1,14 +1,21 @@
 import os
+import sys
 import site
 import platform
 from setuptools import setup, Extension
 from setuptools.command.install import install as inst
 
-print(platform.platform())
-print(site.getsitepackages())
-print(site.getusersitepackages())
+print('Installing bssrdf-estimate ...')
+print('')
+print('Platform: %s' % platform.platform())
+print('Python: %d.%d' % (sys.version_info.major, sys.version_info.minor))
+print('')
 
-include_dirs = [os.path.join(d, 'numpy/core/include') for d in site.getsitepackages()]
+sitepackages = []
+sitepackages.extend(site.getsitepackages())
+sitepackages.append(site.getusersitepackages())
+
+include_dirs = [os.path.join(d, 'numpy/core/include') for d in sitepackages]
 include_dirs.append('submodules/spica/include')
 
 render_module = Extension('bssrdf_estimate.render',
@@ -42,11 +49,16 @@ setup(
     license='MIT',
     ext_modules=[filter_module, render_module],
     classifiers=[
-        'Development Status :: 1 - Planning',
+        'Development Status :: 2 - Pre-Alpha',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.4'
     ],
     packages=[
-        'bssrdf_estimate'
+        'bssrdf_estimate',
+        'bssrdf_estimate.hdr',
+        'bssrdf_estimate.tools',
+        'bssrdf_estimate.interface',
+        'bssrdf_estimate.imfilter',
+        'bssrdf_estimate.render'
     ]
 )

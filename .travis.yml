@@ -83,11 +83,10 @@ before_install:
   - sudo ln -s /run/shm /dev/shm
 
   # Install cvxopt
+  - sudo apt-get install -qq liblapack-dev libblas-dev gfortran
   - conda install --yes python=$TRAVIS_PYTHON_VERSION setuptools pillow numpy scipy matplotlib nose dateutil pyparsing dateutil
   - conda install --yes -c dan_blanchard python-coveralls
-  - sudo apt-get install -qq liblapack-dev libblas-dev
-  - pip --version
-  - pip install cvxopt
+  - conda install --yes -c https://conda.binstar.org/anaconda cvxopt
 
   # Check versions
   - gcc --version
@@ -105,7 +104,6 @@ install:
   - export PATH=${PATH}:`pwd`/build/lib
 
   # Build
-  - cp `pwd`/build/lib/libspica* .
   - python setup.py install
 
 script:
