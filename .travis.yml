@@ -83,11 +83,11 @@ install:
   # Build spica
   - cmake -DCMAKE_PREFIX_PATH=/opt/qt54/lib/cmake -DENABLE_AVX=OFF -DSPICA_BUILD_EXAMPLE=OFF -DSPICA_BUILD_TEST=OFF -DSPICA_BUILD_VIEWER=OFF .
   - cmake --build .
+  - export PYTHONPATH=${PYTHONPATH}:`pwd`/build/lib
   - export PATH=${PATH}:`pwd`/build/lib
-  - echo $PYTHONPATH
 
   # Build
-  - PYTHON_CONFIGURE_OPTS="--enable-shared" python setup.py install
+  - python setup.py install
 
 script:
   - nosetests --nocapture --with-coverage --cover-package=bssrdf_estimate --logging-level=INFO

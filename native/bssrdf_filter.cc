@@ -7,7 +7,7 @@ static PyObject* bilateral_filter(PyObject* self, PyObject* args) {
     double sigma_s, sigma_c;
     PyArrayObject* npImage;
 
-    if (!PyArg_ParseTuple(args, "Odd"), &npImage, &sigma_s, &sigma_c) {
+    if (!PyArg_ParseTuple(args, "Odd", &npImage, &sigma_s, &sigma_c)) {
         PyErr_SetString(PyExc_ValueError, "call with invalid arguments: bilateral_filter(image, sigma_s, sigma_c)");
         return NULL;
     }
