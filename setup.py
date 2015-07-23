@@ -20,7 +20,7 @@ render_module = Extension('bssrdf_estimate.render',
                           libraries=['spica_renderer'],
                           extra_compile_args=['-std=c++11']
                           )
-filter_module = Extension('bssrdf_estimate.imfilter.imfilter',
+filter_module = Extension('bssrdf_estimate.imfilter',
                           sources=['native/bssrdf_filter.cc'],
                           language='c++',
                           include_dirs=include_dirs,
