@@ -7,12 +7,13 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-from .. import hdr
-from .. import tools
+import bssrdf_estimate
+from bssrdf_estimate import hdr
+from bssrdf_estimate import tools
+
 from .control_widget import ControlWidget
 from .image_widget import ImageWidget
 from .curve_plot_widget import CurvePlotWidget
-from ..render import render
 
 config_file = 'config.ini'
 
