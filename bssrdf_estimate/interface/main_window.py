@@ -7,9 +7,9 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-import bssrdf_estimate
 from bssrdf_estimate import hdr
 from bssrdf_estimate import tools
+from bssrdf_esaimte.render import render
 
 from .control_widget import ControlWidget
 from .image_widget import ImageWidget

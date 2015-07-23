@@ -2,4 +2,3 @@
 
 from .tools import *
 from .interface import *
-from .render import render
