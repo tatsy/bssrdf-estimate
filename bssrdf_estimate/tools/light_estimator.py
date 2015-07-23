@@ -2,6 +2,9 @@
 
 import math
 import numpy as np
+import scipy as sp
+import scipy.misc
+import scipy.ndimage.interpolation
 
 from itertools import product
 
@@ -9,6 +12,8 @@ from .. import hdr
 from .vector3d import Vector3D
 from .affine_transform import AffineTransform
 from .directional_light import DirectionalLight
+
+import bssrdf_estimate.imfilter as imfilter
 
 EPS = 1.0e-8
 
@@ -151,25 +156,27 @@ class LightEstimator(object):
         width = image.shape[1]
         height = image.shape[0]
 
-        lum = np.zeros((height, width))
+        lum = np.zeros((height, width), dtype='float32')
         for y, x in product(range(height), range(width)):
             col = image[y,x,:]
             lum[y,x] = hdr.luminance(col[0], col[1], col[2])
 
+        for it in range(10):
+            lum = imfilter.bilateral_filter(lum, 5.0, 1.0, 15)
+
         clip_img, clip_mask, clip_rect = self.clip_masked_region(lum, mask)
 
         num_rot = 64
-        clip_width =clip_img.shape[1]
+        clip_width = clip_img.shape[1]
         clip_height = clip_img.shape[0]
         rot_imgs = [None] * num_rot
         rot_masks = [None] * num_rot
         for i in range(num_rot):
             cx = clip_width / 2
             cy = clip_height / 2
-            theta = - (2.0 * math.pi) * i / num_rot
-            trans = AffineTransform.rotation2D((cx, cy), theta)
-            rot_imgs[i] = trans.apply(clip_img)
-            rot_masks[i] = trans.apply(clip_mask)
+            theta = - 360.0 * i / num_rot
+            rot_imgs[i] = sp.ndimage.interpolation.rotate(clip_img, theta, reshape=False)
+            rot_masks[i] = sp.ndimage.interpolation.rotate(clip_mask, theta, reshape=False)
 
         num_light = len(self.lights)
         num_cont = len(self.silhouette)

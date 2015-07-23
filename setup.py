@@ -11,6 +11,17 @@ print('Platform: %s' % platform.platform())
 print('Python: %d.%d' % (sys.version_info.major, sys.version_info.minor))
 print('')
 
+exclude_dir = ['viewer', 'example', 'test']
+cppfiles = []
+for root, dirs, files in os.walk('submodules'):
+    add_file = True
+    for e in exclude_dir:
+        if e in root:
+            add_file = False
+
+    if add_file:
+        cppfiles.extend([os.path.join(root, f) for f in files if f.endswith('.cc')])
+
 sitepackages = []
 sitepackages.extend(site.getsitepackages())
 sitepackages.append(site.getusersitepackages())
@@ -19,12 +30,11 @@ include_dirs = [os.path.join(d, 'numpy/core/include') for d in sitepackages]
 include_dirs.append('submodules/spica/include')
 
 render_module = Extension('bssrdf_estimate.render',
-                          sources=['native/bssrdf_render.cc'],
+                          sources=['native/bssrdf_render.cc'] + cppfiles,
                           language='c++',
                           include_dirs=include_dirs,
-                          library_dirs=['build/lib'],
-                          runtime_library_dirs=['build/bin', 'build/lib'],
-                          libraries=['spica_renderer'],
+                          # library_dirs=['build/lib'],
+                          # libraries=['spica_renderer'],
                           extra_compile_args=['-std=c++11']
                           )
 filter_module = Extension('bssrdf_estimate.imfilter',
@@ -58,7 +68,5 @@ setup(
         'bssrdf_estimate.hdr',
         'bssrdf_estimate.tools',
         'bssrdf_estimate.interface',
-        'bssrdf_estimate.imfilter',
-        'bssrdf_estimate.render'
     ]
 )

@@ -64,9 +64,9 @@ before_install:
   - cd ..
 
   # Build PyQt5
-  - wget http://sourceforge.net/projects/pyqt/files/PyQt5/PyQt-5.4.2/PyQt-gpl-5.4.2.tar.gz
-  - tar xf PyQt-gpl-5.4.2.tar.gz
-  - cd PyQt-gpl-5.4.2
+  - wget http://sourceforge.net/projects/pyqt/files/PyQt5/PyQt-5.4.1/PyQt-gpl-5.4.1.tar.gz
+  - tar xf PyQt-gpl-5.4.1.tar.gz
+  - cd PyQt-gpl-5.4.1
   - python configure.py -c --confirm-license --no-designer-plugin -e QtCore -e QtGui -e QtWidgets
   - make -j4
   - sudo make install
@@ -86,22 +86,12 @@ before_install:
   - sudo apt-get install -qq liblapack-dev libblas-dev gfortran
   - conda install --yes python=$TRAVIS_PYTHON_VERSION setuptools pillow numpy scipy matplotlib nose dateutil pyparsing dateutil
   - conda install --yes -c dan_blanchard python-coveralls
-  - conda install --yes -c https://conda.binstar.org/anaconda cvxopt
-
-  # Check versions
-  - gcc --version
-  - g++ --version
-  - clang --version
-  - clang++ --version
-  - cmake --version
-  - qmake --version
+  - conda install --yes -c anaconda cvxopt
 
 install:
   # Build spica
   - cmake -DCMAKE_PREFIX_PATH=/opt/qt54/lib/cmake -DENABLE_AVX=OFF -DSPICA_BUILD_EXAMPLE=OFF -DSPICA_BUILD_TEST=OFF -DSPICA_BUILD_VIEWER=OFF .
-  - cmake --build .
-  - export PYTHONPATH=${PYTHONPATH}:`pwd`/build/lib
-  - export PATH=${PATH}:`pwd`/build/lib
+  # - cmake --build .
 
   # Build
   - python setup.py install
