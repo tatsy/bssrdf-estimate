@@ -58,7 +58,5 @@ setup(
         'bssrdf_estimate.hdr',
         'bssrdf_estimate.tools',
         'bssrdf_estimate.interface',
-        'bssrdf_estimate.imfilter',
-        'bssrdf_estimate.render'
     ]
 )
