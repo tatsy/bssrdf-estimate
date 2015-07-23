@@ -84,9 +84,9 @@ install:
   - cmake -DCMAKE_PREFIX_PATH=/opt/qt54/lib/cmake -DENABLE_AVX=OFF -DSPICA_BUILD_EXAMPLE=OFF -DSPICA_BUILD_TEST=OFF -DSPICA_BUILD_VIEWER=OFF .
   - cmake --build .
   - ls -l
-  - ls -l `pwd`/bin
-  - export PYTHONPATH=${PYTHONPATH}:`pwd`/bin
-  - export PATH=${PATH}:`pwd`/bin
+  - ls -l `pwd`/build
+  - export PYTHONPATH=${PYTHONPATH}:`pwd`/build/bin
+  - export PATH=${PATH}:`pwd`/build/bin
   - echo $PYTHONPATH
 
   # Build
