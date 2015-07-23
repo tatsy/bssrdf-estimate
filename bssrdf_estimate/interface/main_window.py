@@ -10,10 +10,7 @@ from PyQt5.QtWidgets import *
 from bssrdf_estimate import hdr
 from bssrdf_estimate import tools
 from bssrdf_estimate.render import render
-
-from .control_widget import ControlWidget
-from .image_widget import ImageWidget
-from .curve_plot_widget import CurvePlotWidget
+from bssrdf_estimate.interface import *
 
 config_file = 'config.ini'
 
@@ -21,8 +18,15 @@ class MainWindow(QWidget):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
         self.setWindowTitle('BSSRDF Estimate')
-        self.boxLayout = QHBoxLayout()
         self.setFont(QFont('Meiryo UI'))
+
+        self.boxLayout = QHBoxLayout()
+        self.vboxLayout = QVBoxLayout()
+
+        self.setLayout(self.vboxLayout)
+
+        self.topContainer = QWidget()
+        self.topContainer.setLayout(self.boxLayout)
 
         self.tabWidgets = QTabWidget()
         self.tabWidgets.setTabsClosable(True)
@@ -37,9 +41,19 @@ class MainWindow(QWidget):
         self.controlWidget.setSizePolicy(sizeForControls)
         self.boxLayout.addWidget(self.controlWidget)
 
-        self.setSignalSlots()
+        self.consoleWidget = ConsoleWidget()
 
-        self.setLayout(self.boxLayout)
+        sizeForTop = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizeForTop.setVerticalStretch(3)
+        self.topContainer.setSizePolicy(sizeForTop)
+        sizeForConsole = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizeForConsole.setVerticalStretch(1)
+        self.consoleWidget.setSizePolicy(sizeForConsole)
+
+        self.vboxLayout.addWidget(self.topContainer)
+        self.vboxLayout.addWidget(self.consoleWidget)
+
+        self.setSignalSlots()
 
         self.project = None
 
