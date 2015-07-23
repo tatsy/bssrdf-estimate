@@ -100,7 +100,7 @@ install:
   # Build spica
   - cmake -DCMAKE_PREFIX_PATH=/opt/qt54/lib/cmake -DENABLE_AVX=OFF -DSPICA_BUILD_EXAMPLE=OFF -DSPICA_BUILD_TEST=OFF -DSPICA_BUILD_VIEWER=OFF .
   - cmake --build .
-  - export PYTHONPATH=/home/travis/miniconda/lib/python3.4/site-packages/bssrdf_estimate:${PYTHONPATH}
+  - export PYTHONPATH=/home/travis/miniconda/lib/python3.4/site-packages:${PYTHONPATH}
 
   # Build
   - python setup.py install
