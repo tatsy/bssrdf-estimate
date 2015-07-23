@@ -23,7 +23,6 @@ render_module = Extension('bssrdf_estimate.render',
                           language='c++',
                           include_dirs=include_dirs,
                           library_dirs=['build/lib'],
-                          runtime_library_dirs=['build/bin', 'build/lib'],
                           libraries=['spica_renderer'],
                           extra_compile_args=['-std=c++11']
                           )

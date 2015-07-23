@@ -2,6 +2,8 @@
 
 import math
 import numpy as np
+import scipy as sp
+import scipy.misc
 
 from itertools import product
 
@@ -167,9 +169,11 @@ class LightEstimator(object):
             cx = clip_width / 2
             cy = clip_height / 2
             theta = - (2.0 * math.pi) * i / num_rot
-            trans = AffineTransform.rotation2D((cx, cy), theta)
-            rot_imgs[i] = trans.apply(clip_img)
-            rot_masks[i] = trans.apply(clip_mask)
+            # trans = AffineTransform.rotation2D((cx, cy), theta)
+            # rot_imgs[i] = trans.apply(clip_img)
+            # rot_masks[i] = trans.apply(clip_mask)
+            rot_imgs[i] = sp.misc.imrotate(clip_img, theta, 'bicubic')
+            rot_masks[i] = sp.misc.imrotate(clip_mask, theta, 'bicubic')
 
         num_light = len(self.lights)
         num_cont = len(self.silhouette)
