@@ -55,9 +55,9 @@ before_install:
   - sudo ln -sf /opt/qt54/bin/qmake /usr/bin/qmake
 
   # Build SIP
-  - wget http://sourceforge.net/projects/pyqt/files/sip/sip-4.16.8/sip-4.16.8.tar.gz
-  - tar xf sip-4.16.8.tar.gz
-  - cd sip-4.16.8
+  - wget http://sourceforge.net/projects/pyqt/files/sip/sip-4.16.9/sip-4.16.9.tar.gz
+  - tar xf sip-4.16.9.tar.gz
+  - cd sip-4.16.9
   - python configure.py
   - make -j4
   - sudo make install
@@ -88,23 +88,13 @@ before_install:
   - conda install --yes -c dan_blanchard python-coveralls
   - conda install --yes -c anaconda cvxopt
 
-  # Check versions
-  - gcc --version
-  - g++ --version
-  - clang --version
-  - clang++ --version
-  - cmake --version
-  - qmake --version
-
 install:
   # Build spica
   - cmake -DCMAKE_PREFIX_PATH=/opt/qt54/lib/cmake -DENABLE_AVX=OFF -DSPICA_BUILD_EXAMPLE=OFF -DSPICA_BUILD_TEST=OFF -DSPICA_BUILD_VIEWER=OFF .
-  - cmake --build .
-  - export PYTHONPATH=/home/travis/miniconda/lib/python3.4/site-packages:${PYTHONPATH}
+  # - cmake --build .
 
   # Build
-  - python setup.py install
-  - ls -l bssrdf_estimate
+  - python setup.py develop
 
 script:
   - nosetests --nocapture --with-coverage --cover-package=bssrdf_estimate --logging-level=INFO
