@@ -87,7 +87,7 @@ install:
   - echo $PYTHONPATH
 
   # Build
-  - python setup.py install
+  - PYTHON_CONFIGURE_OPTS="--enable-shared" python setup.py install
 
 script:
   - nosetests --nocapture --with-coverage --cover-package=bssrdf_estimate --logging-level=INFO
