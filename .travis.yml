@@ -85,9 +85,9 @@ before_install:
   # Install cvxopt
   - sudo apt-get install -qq liblapack-dev libblas-dev gfortran
   - conda install --yes python=$TRAVIS_PYTHON_VERSION setuptools pillow numpy scipy matplotlib nose dateutil pyparsing dateutil
+  - conda install --yes python=$TRAVIS_PYTHON_VERSION -c dsdale24 pyqt5
   - conda install --yes -c dan_blanchard python-coveralls
   - conda install --yes -c anaconda cvxopt
-  - conda install --yes -c dsdale24 pyqt5
 
   # Check versions
   - gcc --version
