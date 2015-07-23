@@ -8,6 +8,8 @@ import scipy.misc
 
 from itertools import product
 
+import bssrdf_estimate.imfilter as imfilter
+
 EPS = 1.0e-8
 PIXEL_MASKED = 1
 PIXEL_NOT_MASKED = 0
@@ -22,7 +24,7 @@ class DepthEstimator(object):
     def process(self):
         width = self.img.shape[1]
         height = self.img.shape[0]
-        luminance = np.zeros((height, width))
+        luminance = np.zeros((height, width), dtype='float32')
 
         pixel_count = 0
         sigma = 0.0
@@ -38,7 +40,9 @@ class DepthEstimator(object):
             l = luminance[y, x]
             luminance[y, x] = math.pow(l, N_POW) / (math.pow(l, N_POW) + math.pow(sigma, N_POW))
 
-        # TODO: apply bilateral filter
+        # Apply bilateral filter
+        for it in range(10):
+            luminance = imfilter.bilateral_filter(luminance, 10.0, 1.0, 15)
 
         # Invert sigmoidal compression in Eq.11 of [Khan et al. 2006]
         self.depth = np.zeros((height, width))

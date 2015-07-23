@@ -9,6 +9,7 @@ from PyQt5.QtWidgets import *
 
 import bssrdf_estimate.hdr as hdr
 import bssrdf_estimate.tools as tools
+
 from bssrdf_estimate.interface import *
 from bssrdf_estimate.render import render
 
@@ -90,6 +91,7 @@ class MainWindow(QWidget):
 
         _, ext = os.path.splitext(filename)
         if ext == '.xml':
+            print(tools)
             self.project = tools.Project(filename)
 
         imgWidget = ImageWidget()
@@ -122,6 +124,7 @@ class MainWindow(QWidget):
         self.Rd_colors = np.zeros((self.Rd_distances.size, 3), dtype='float32')
         for c in range(3):
             self.Rd_colors[:,c] = np.array(be.Rd[c][1])
+        print('Finish!!')
 
     def renderPushButtonClicked(self):
         w = self.controlWidget.getWidthValue()
