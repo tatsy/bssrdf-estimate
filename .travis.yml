@@ -100,8 +100,7 @@ install:
   # Build spica
   - cmake -DCMAKE_PREFIX_PATH=/opt/qt54/lib/cmake -DENABLE_AVX=OFF -DSPICA_BUILD_EXAMPLE=OFF -DSPICA_BUILD_TEST=OFF -DSPICA_BUILD_VIEWER=OFF .
   - cmake --build .
-  - export PYTHONPATH=${PYTHONPATH}:`pwd`/build/lib
-  - export PATH=${PATH}:`pwd`/build/lib
+  - export PYTHONPATH=`pwd`/build/lib:${PYTHONPATH}
 
   # Build
   - python setup.py install
