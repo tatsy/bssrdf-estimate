@@ -10,27 +10,22 @@ class ParameterWidget(QWidget):
         self.formLayout = QFormLayout()
 
         self.widthLineEdit = QLineEdit()
-        self.widthLineEdit.setMaximumWidth(100)
         self.widthLineEdit.setText('800')
         self.formLayout.addRow('width', self.widthLineEdit)
 
         self.heightLineEdit = QLineEdit()
-        self.heightLineEdit.setMaximumWidth(100)
         self.heightLineEdit.setText('600')
         self.formLayout.addRow('height', self.heightLineEdit)
 
         self.sppLineEdit = QLineEdit()
-        self.sppLineEdit.setMaximumWidth(100)
         self.sppLineEdit.setText('1')
         self.formLayout.addRow('samples', self.sppLineEdit)
 
         self.nphotonLineEdit = QLineEdit()
-        self.nphotonLineEdit.setMaximumWidth(100)
         self.nphotonLineEdit.setText('1000000')
         self.formLayout.addRow('photons', self.nphotonLineEdit)
 
         self.scaleLineEdit = QLineEdit()
-        self.scaleLineEdit.setMaximumWidth(100)
         self.scaleLineEdit.setText('0.01')
         self.formLayout.addRow('scale', self.scaleLineEdit)
 
@@ -43,15 +38,12 @@ class ControlWidget(QWidget):
         self.paramWidget = ParameterWidget()
 
         self.loadPushButton = QPushButton()
-        self.loadPushButton.setMaximumWidth(100)
         self.loadPushButton.setText('Load')
 
         self.estimatePushButton = QPushButton()
-        self.estimatePushButton.setMaximumWidth(100)
         self.estimatePushButton.setText('Estimate')
 
         self.renderPushButton = QPushButton()
-        self.renderPushButton.setMaximumWidth(100)
         self.renderPushButton.setText('Render')
 
         self.boxLayout = QVBoxLayout()

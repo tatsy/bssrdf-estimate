@@ -83,9 +83,10 @@ install:
   # Build spica
   - cmake -DCMAKE_PREFIX_PATH=/opt/qt54/lib/cmake -DENABLE_AVX=OFF -DSPICA_BUILD_EXAMPLE=OFF -DSPICA_BUILD_TEST=OFF -DSPICA_BUILD_VIEWER=OFF .
   - cmake --build .
-  - ls -l `pwd`/build/bin
-  - export PYTHONPATH=${PYTHONPATH}:`pwd`/build/bin
-  - export PATH=${PATH}:`pwd`/build/bin
+  - ls -l
+  - ls -l `pwd`/bin
+  - export PYTHONPATH=${PYTHONPATH}:`pwd`/bin
+  - export PATH=${PATH}:`pwd`/bin
   - echo $PYTHONPATH
 
   # Build
