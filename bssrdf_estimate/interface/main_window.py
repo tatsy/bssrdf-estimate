@@ -97,6 +97,8 @@ class MainWindow(QWidget):
 
     def loadPushButtonClicked(self):
         filename = self.getOpenFileName()
+        if filename == '':
+            return
 
         _ , ext = os.path.splitext(filename)
         if ext == '.xml':
@@ -105,6 +107,14 @@ class MainWindow(QWidget):
         else:
             self.consoleOutput.emit('[INFO] specified project is invalid!')
             return
+
+        # If project stores rendering parameters, set them to the interface
+        if 'render-params' in self.project.entries:
+            self.controlWidget.width_value = self.project.render_params.image_width
+            self.controlWidget.height_value = self.project.render_params.image_height
+            # self.controlWidget.sample_per_pixel = self.project.render_sample_per_pixel
+            self.controlWidget.num_photons = self.project.render_params.photons
+            self.controlWidget.bssrdf_scale = self.project.render_params.bssrdf_scale
 
         imgWidget = ImageWidget()
         imgWidget.showImage(self.project.image)
@@ -142,23 +152,13 @@ class MainWindow(QWidget):
         self.consoleOutput.emit('[INFO] Estimation is successfull finished!')
 
     def renderPushButtonClicked(self):
-        filename = self.getOpenFileName()
-        if filename == "":
+        if self.project is None:
+            self.showMessageBox('Please load project first!')
             return
-
-        _ , ext = os.path.splitext(filename)
-        if ext == '.xml':
-            self.project = tools.Project(filename)
 
         if not 'bssrdf' in self.project.entries:
             self.showMessageBox('Estimate BSSRDF first!')
-
-        if 'render-params' in self.project.entries:
-            self.controlWidget.width_value = self.project.render_params.image_width
-            self.controlWidget.height_value = self.project.render_params.image_height
-            # self.controlWidget.sample_per_pixel = self.project.render_sample_per_pixel
-            self.controlWidget.num_photons = self.project.render_params.photons
-            self.controlWidget.bssrdf_scale = self.project.render_params.bssrdf_scale
+            return
 
         sc = self.controlWidget.bssrdf_scale
         self.project.bssrdf.scale(sc)
