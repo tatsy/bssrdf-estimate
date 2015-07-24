@@ -11,6 +11,7 @@ import xml.dom.minidom
 import bssrdf_estimate.hdr as hdr
 
 from .diffuse_bssrdf import DiffuseBSSRDF
+from .render_parameters import RenderParameters
 
 class Project(object):
     def __init__(self, filename):
@@ -31,6 +32,17 @@ class Project(object):
                 self.mask[np.where(self.mask >= 128)] = 1
             elif e.get('type') == 'bssrdf':
                 self.bssrdf = DiffuseBSSRDF.load(os.path.join(self.dirname, e.text))
+            elif e.get('type') == 'render-params':
+                table = {}
+                for ee in e.findall('param'):
+                    table[ee.get('type')] = ee.text
+                self.render_params = RenderParameters(int(table['image-width']),
+                                                      int(table['image-height']),
+                                                      int(table['spp']),
+                                                      int(table['photons']),
+                                                      float(table['bssrdf-scale']))
+            else:
+                pass
             self.entries[e.get('type')] = e.text
 
     def add_entry(self, key, val):
@@ -41,13 +53,43 @@ class Project(object):
         doc  = impl.createDocument(None, 'content', None)
         root = doc.documentElement
         for k, v in self.entries.items():
-            node = doc.createElement('entry')
-            text = doc.createTextNode(v)
-            node.appendChild(text)
-            attr = doc.createAttribute('type')
-            attr.value = k
-            node.setAttributeNode(attr)
-            root.appendChild(node)
+                node = doc.createElement('entry')
+                if k == 'render-params':
+                    subnodes = self.serializeRenderParams(doc, v)
+                    for sn in subnodes:
+                        node.appendChild(sn)
+                else:
+                    text = doc.createTextNode(v)
+                    node.appendChild(text)
+                attr = doc.createAttribute('type')
+                attr.value = k
+                node.setAttributeNode(attr)
+                root.appendChild(node)
 
         with open(self.filename, 'w') as f:
             f.write(doc.toprettyxml())
+
+    @classmethod
+    def serializeRenderParams(cls, doc, renderparams):
+        if not isinstance(renderparams, RenderParameters):
+            raise Exception('[ERROR] Render parameter is invalid!!')
+
+        table = {
+            'image-width': renderparams.image_width,
+            'image-height': renderparams.image_height,
+            'spp': renderparams.spp,
+            'photons': renderparams.photons,
+            'bssrdf-scale': renderparams.bssrdf_scale
+        }
+
+        nodes = []
+        for k, v in table.items():
+            node = doc.createElement('param')
+            attr = doc.createAttribute('type')
+            attr.value = k
+            node.setAttributeNode(attr)
+            text = doc.createTextNode(str(v))
+            node.appendChild(text)
+            nodes.append(node)
+
+        return nodes

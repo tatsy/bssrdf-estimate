@@ -94,7 +94,7 @@ install:
   # - cmake --build .
 
   # Build
-  - python setup.py develop
+  - python setup.py install
 
 script:
   - nosetests --nocapture --with-coverage --cover-package=bssrdf_estimate --logging-level=INFO

@@ -53,17 +53,42 @@ class ControlWidget(QWidget):
         self.boxLayout.addWidget(self.renderPushButton)
         self.setLayout(self.boxLayout)
 
-    def getWidthValue(self):
+    @property
+    def width_value(self):
         return int(self.paramWidget.widthLineEdit.text())
 
-    def getHeightValue(self):
+    @width_value.setter
+    def width_value(self, value):
+        self.paramWidget.widthLineEdit.setText(str(value))
+
+    @property
+    def height_value(self):
         return int(self.paramWidget.heightLineEdit.text())
 
-    def getSamplePerPixel(self):
+    @height_value.setter
+    def height_value(self, value):
+        self.paramWidget.heightLineEdit.setText(str(value))
+
+    @property
+    def sample_per_pixel(self):
         return int(self.paramWidget.sppLineEdit.text())
 
-    def getNumberOfPhotons(self):
+    @sample_per_pixel.setter
+    def sample_per_pixel(self, value):
+        self.paramWidget.sppLineEdit.setText(str(value))
+
+    @property
+    def num_photons(self):
         return int(self.paramWidget.nphotonLineEdit.text())
 
-    def getScale(self):
+    @num_photons.setter
+    def num_photons(self, value):
+        self.paramWidget.nphotonLineEdit.setText(str(value))
+
+    @property
+    def bssrdf_scale(self):
         return float(self.paramWidget.scaleLineEdit.text())
+
+    @bssrdf_scale.setter
+    def bssrdf_scale(self, value):
+        self.paramWidget.scaleLineEdit.setText(str(value))

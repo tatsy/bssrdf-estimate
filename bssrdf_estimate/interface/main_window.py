@@ -153,14 +153,27 @@ class MainWindow(QWidget):
         if not 'bssrdf' in self.project.entries:
             self.showMessageBox('Estimate BSSRDF first!')
 
-        self.project.bssrdf.scale(self.controlWidget.getScale())
+        if 'render-params' in self.project.entries:
+            self.controlWidget.width_value = self.project.render_params.image_width
+            self.controlWidget.height_value = self.project.render_params.image_height
+            # self.controlWidget.sample_per_pixel = self.project.render_sample_per_pixel
+            self.controlWidget.num_photons = self.project.render_params.photons
+            self.controlWidget.bssrdf_scale = self.project.render_params.bssrdf_scale
 
-        w = self.controlWidget.getWidthValue()
-        h = self.controlWidget.getHeightValue()
-        spp = self.controlWidget.getSamplePerPixel()
-        photons = self.controlWidget.getNumberOfPhotons()
-        renderparams = tools.RenderParameters(w, h, spp, photons)
+        sc = self.controlWidget.bssrdf_scale
+        self.project.bssrdf.scale(sc)
 
+        w = self.controlWidget.width_value
+        h = self.controlWidget.height_value
+        spp = self.controlWidget.sample_per_pixel
+        photons = self.controlWidget.num_photons
+        renderparams = tools.RenderParameters(w, h, spp, photons, sc)
+
+        # Store render params to the project
+        self.project.add_entry('render-params', renderparams)
+        self.project.overwrite()
+
+        # Start rendering
         renderWidget = BSSRDFRenderWidget()
         self.tabWidgets.addTab(renderWidget, 'Render')
         renderWidget.startRendering(renderparams, self.project.bssrdf)
