@@ -67,6 +67,7 @@ First, please install required python modules from http://www.lfd.uci.edu/~gohlk
 * numpy
 * scipy
 * matplotlib
+* cvxopt
 * PyQt5
 
 For ``Qt5``, please visit https://www.qt.io/download-open-source/ to get web installer. After that get source files of ``SIP`` and ``PyQt5`` from following websites.
