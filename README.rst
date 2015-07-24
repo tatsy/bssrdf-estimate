@@ -17,37 +17,36 @@ Installation
 
 On **Linux**, you can easily install bssrdf-estimate with some commands.
 
-------
-Linux
-------
+-------------------------
+Linux (Ubuntu 14.04 LTS)
+-------------------------
 
-Install LAPACK/BLAS
+First, please install ``LAPACK`` and ``BLAS`` with ``apt-get``.
 
 .. code-block:: bash
 
   $ sudo apt-get install liblapack-dev libblas-dev
 
-Install required packages. You can do it easily with ``pip``
+Second, please install required python modules. The modules list is stored in `requirements.txt <https://github.com/tatsy/bssrdf-estimate/blob/master/requirements.txt>`_, which you can install them with ``pip``. If you install them for global environment, please do not forget ``sudo``.
 
 .. code-block:: bash
 
   $ sudo pip install -r requirements.txt
 
-
-Install ``spica`` (renderer). You can do it easily with ``cmake``
+Next, please install `spica <https://github.com/tatsy/spica.git>`_ (a renderer package). ``spica`` can be easily built with ``cmake``. As ``spica`` is recorded as a submodule, you can install it with the following command.
 
 .. code-block:: bash
 
   $ git submodule update --init --recursive
-  $ cmake .
+  $ cmake -DSPICA_BUILD_EXAMPLE=OFF -DSPICA_BUILD_TEST=OFF -DBUILD_SPICA_VIEWER=OFF -DENABLE_AVX=OFF .
   $ cmake --build .
 
 
-Run ``setup.py`` to finish installation.
+Finally, please run ``setup.py`` to finish installation. Again, please do not forget to add ``sudo`` when you install this package for your global environment.
 
 .. code-block:: bash
 
-  $ python setup.py install
+  $ sudo python setup.py install
 
 
 --------
