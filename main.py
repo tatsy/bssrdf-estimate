@@ -3,6 +3,9 @@
 import os
 import sys
 
+import matplotlib
+matplotlib.use('Qt5Agg')
+
 from PyQt5.QtWidgets import QApplication
 from bssrdf_estimate.interface import MainWindow
 

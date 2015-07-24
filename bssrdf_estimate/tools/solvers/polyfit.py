@@ -58,7 +58,7 @@ def cubic_fitting(p):
         w_s = 1.0e-4
 
         # Hermite interpolation
-        _, xs = spline_interpolate(x, n_div)
+        _ , xs = spline_interpolate(x, n_div)
 
         # Error between original
         cost = 0.0

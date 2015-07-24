@@ -101,11 +101,11 @@ class BSSRDFEstimator(object):
                 normal = Vector3D(-dx, -dy, 1.0).normalized()
                 ret.append(PixelConstraint(col, pos, normal))
 
-        max_const = 2000
+        max_const = 5000
         num_const = len(ret)
 
         if num_const > max_const:
-            print('Masked pixels are too many. Sample to reduce the number!')
+            print('[INFO] Masked pixels are too many. Sample to reduce the number!')
             temp = ret
             ret = []
             for i in range(max_const):
@@ -140,17 +140,18 @@ class BSSRDFEstimator(object):
 
     def solve_linear_system(self, A, bb, constrained=False):
         if constrained:
-            print('Use constrained solver...')
-            xx = SolveCon(A, bb).x
+            print('[INFO] Use constrained solver...')
+            xx = SolveCon(A, bb).xx
         else:
-            print('Use unconstrained solver...')
-            xx = SolveUnc(A, bb).x
+            print('[INFO] Use unconstrained solver...')
+            xx = SolveUnc(A, bb).xx
 
-        assert xx is not None, "Solution x is invalid"
+        assert xx is not None, "[ASSERT] Solution x is invalid"
 
         self.set_curves(xx)
 
     def set_curves(self, xx):
+        # Smoothing the Rd curve
         self.bssrdf = DiffuseBSSRDF()
         for i in range(3):
             xs, ys = spline_interpolate(xx[:,i])
