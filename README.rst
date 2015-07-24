@@ -32,7 +32,7 @@ Second, please install required python modules. The modules list is stored in `r
 
   $ sudo pip install -r requirements.txt
 
-Please note that ``PyQt5`` is not listed in `requirements.txt <https://github.com/tatsy/bssrdf-estimate/blob/master/requirements.txt>`_ because its installation varies for different Linux versions. 
+Please note that ``PyQt5`` is not listed in `requirements.txt <https://github.com/tatsy/bssrdf-estimate/blob/master/requirements.txt>`_ because its installation varies for different Linux versions.
 
 So, please separately install ``Qt5``, ``SIP`` and ``PyQt5`` from following websites.
 
@@ -88,7 +88,7 @@ Finally, please run ``setup.py`` with appropriate VC compiler. For example, you 
 
   // Launch VC 20xx command prompt
   $ python setup.py install
-  
+
 ======
 Usage
 ======
@@ -108,10 +108,8 @@ You can load project file by pushing ``Load`` button. The project sample is as f
     <ettry type="mask">target_mask.png</entry>
   </content>
 
-
-
 ========
 License
 ========
 
-MIT License 2015 (c) tatsy, Tatsuya Yatagawa
+The MIT License 2015 (c) tatsy, Tatsuya Yatagawa
