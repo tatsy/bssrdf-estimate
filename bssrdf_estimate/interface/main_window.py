@@ -17,6 +17,9 @@ config_file = 'config.ini'
 class MainWindow(QWidget):
     ''' Main window of estimation system
     '''
+
+    consoleOutput = pyqtSignal(str)
+
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
         self.setWindowTitle('BSSRDF Estimate')
@@ -64,6 +67,7 @@ class MainWindow(QWidget):
         self.controlWidget.loadPushButton.clicked.connect(self.loadPushButtonClicked)
         self.controlWidget.estimatePushButton.clicked.connect(self.estimatePushButtonClicked)
         self.controlWidget.renderPushButton.clicked.connect(self.renderPushButtonClicked)
+        self.consoleOutput.connect(self.consoleWidget.consoleOutput)
 
     def getOpenFileName(self):
         lastOpenedDir = self.getLastOpenedDirectory()
@@ -97,6 +101,10 @@ class MainWindow(QWidget):
         _ , ext = os.path.splitext(filename)
         if ext == '.xml':
             self.project = tools.Project(filename)
+            self.consoleOutput.emit('[INFO] project is successfully loaded!')
+        else:
+            self.consoleOutput.emit('[INFO] specified project is invalid!')
+            return
 
         imgWidget = ImageWidget()
         imgWidget.showImage(self.project.image)
@@ -116,6 +124,9 @@ class MainWindow(QWidget):
 
         le = tools.LightEstimator()
         le.process(self.project.image, self.project.mask)
+        for i in range(le.NUM_LIGHTS):
+            msg = '[INFO] light No.{0:1}: phi = {1:7.4f}, theta = {2:7.4f}'.format(i+1, le.lights[i].phi, le.lights[i].theta)
+            self.consoleOutput.emit(msg)
 
         be = tools.BSSRDFEstimator()
         be.process(self.project.image, self.project.mask, de.depth, le.lights)
@@ -128,7 +139,7 @@ class MainWindow(QWidget):
         be.bssrdf.save(os.path.join(self.openedDirectory, 'Rd_curve.dat'))
         self.project.add_entry('bssrdf', 'Rd_curve.dat')
         self.project.overwrite()
-        print('Finish!!')
+        self.consoleOutput.emit('[INFO] Estimation is successfull finished!')
 
     def renderPushButtonClicked(self):
         filename = self.getOpenFileName()

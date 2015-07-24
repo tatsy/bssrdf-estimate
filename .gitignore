@@ -1,6 +1,8 @@
 *.pyc
+result/*
 build/*
 dist/*
+
 *.egg-info/*
 
 *.obj
