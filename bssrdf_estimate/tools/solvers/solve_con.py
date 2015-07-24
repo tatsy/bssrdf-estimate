@@ -6,10 +6,10 @@ from .polyfit import cubic_fitting
 
 class SolveCon(object):
     def __init__(self, A, b):
-        self.x = np.zeros((A.shape[1], b.shape[1]))
+        self.xx = np.zeros((A.shape[1], b.shape[1]))
         for c in range(b.shape[1]):
             p = self._solve_sub(A, b[:,c])
-            self.x[:,c] = p
+            self.xx[:,c] = p
 
     @classmethod
     def _solve_sub(cls, A, b):

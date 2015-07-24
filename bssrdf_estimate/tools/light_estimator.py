@@ -75,8 +75,6 @@ class LightEstimator(object):
         self.detect_silhouette(image, mask)
         self.contour_voting()
         self.estimate_zenith(image, mask)
-        for i in range(self.NUM_LIGHTS):
-            print('phi = %f, theta = %f' % (self.lights[i].phi, self.lights[i].theta))
 
     def detect_silhouette(self, image, mask):
         dx = [-1, 0, 1, -1, 1, -1, 0, 1]

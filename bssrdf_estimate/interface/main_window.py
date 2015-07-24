@@ -11,11 +11,15 @@ import bssrdf_estimate.hdr as hdr
 import bssrdf_estimate.tools as tools
 
 from bssrdf_estimate.interface import *
-from bssrdf_estimate.render import render
 
 config_file = 'config.ini'
 
 class MainWindow(QWidget):
+    ''' Main window of estimation system
+    '''
+
+    consoleOutput = pyqtSignal(str)
+
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
         self.setWindowTitle('BSSRDF Estimate')
@@ -63,6 +67,16 @@ class MainWindow(QWidget):
         self.controlWidget.loadPushButton.clicked.connect(self.loadPushButtonClicked)
         self.controlWidget.estimatePushButton.clicked.connect(self.estimatePushButtonClicked)
         self.controlWidget.renderPushButton.clicked.connect(self.renderPushButtonClicked)
+        self.consoleOutput.connect(self.consoleWidget.consoleOutput)
+
+    def getOpenFileName(self):
+        lastOpenedDir = self.getLastOpenedDirectory()
+        filename = QFileDialog.getOpenFileName(self, 'Open project XML', lastOpenedDir, 'Project XML (*.xml)')[0]
+        if filename == "":
+            return ""
+        self.rememberLastOpenedDirectory(filename)
+        self.openedDirectory = os.path.dirname(filename)
+        return filename
 
     @classmethod
     def rememberLastOpenedDirectory(cls, filename):
@@ -82,16 +96,15 @@ class MainWindow(QWidget):
         self.tabWidgets.removeTab(index)
 
     def loadPushButtonClicked(self):
-        lastOpenedDir = self.getLastOpenedDirectory()
-        filename = QFileDialog.getOpenFileName(self, 'Open project XML', lastOpenedDir, 'Project XML (*.xml)')[0]
-        if filename == "":
-            return
+        filename = self.getOpenFileName()
 
-        self.rememberLastOpenedDirectory(filename)
-
-        _, ext = os.path.splitext(filename)
+        _ , ext = os.path.splitext(filename)
         if ext == '.xml':
             self.project = tools.Project(filename)
+            self.consoleOutput.emit('[INFO] project is successfully loaded!')
+        else:
+            self.consoleOutput.emit('[INFO] specified project is invalid!')
+            return
 
         imgWidget = ImageWidget()
         imgWidget.showImage(self.project.image)
@@ -111,28 +124,46 @@ class MainWindow(QWidget):
 
         le = tools.LightEstimator()
         le.process(self.project.image, self.project.mask)
+        for i in range(le.NUM_LIGHTS):
+            msg = '[INFO] light No.{0:1}: phi = {1:7.4f}, theta = {2:7.4f}'.format(i+1, le.lights[i].phi, le.lights[i].theta)
+            self.consoleOutput.emit(msg)
 
         be = tools.BSSRDFEstimator()
         be.process(self.project.image, self.project.mask, de.depth, le.lights)
 
         cpw = CurvePlotWidget()
-        cpw.setCurveData(be.Rd)
+        cpw.setCurveData(be.bssrdf)
         self.tabWidgets.addTab(cpw, 'Curve')
 
-        self.Rd_distances = np.array(be.Rd[0][0], dtype='float32')
-        self.Rd_colors = np.zeros((self.Rd_distances.size, 3), dtype='float32')
-        for c in range(3):
-            self.Rd_colors[:,c] = np.array(be.Rd[c][1])
-        print('Finish!!')
+        # Save BSSRDF file
+        be.bssrdf.save(os.path.join(self.openedDirectory, 'Rd_curve.dat'))
+        self.project.add_entry('bssrdf', 'Rd_curve.dat')
+        self.project.overwrite()
+        self.consoleOutput.emit('[INFO] Estimation is successfull finished!')
 
     def renderPushButtonClicked(self):
+        filename = self.getOpenFileName()
+        if filename == "":
+            return
+
+        _ , ext = os.path.splitext(filename)
+        if ext == '.xml':
+            self.project = tools.Project(filename)
+
+        if not 'bssrdf' in self.project.entries:
+            self.showMessageBox('Estimate BSSRDF first!')
+
+        self.project.bssrdf.scale(self.controlWidget.getScale())
+
         w = self.controlWidget.getWidthValue()
         h = self.controlWidget.getHeightValue()
         spp = self.controlWidget.getSamplePerPixel()
         photons = self.controlWidget.getNumberOfPhotons()
-        scale = self.controlWidget.getScale()
+        renderparams = tools.RenderParameters(w, h, spp, photons)
 
-        render(w, h, spp, photons, scale, self.Rd_distances, self.Rd_colors)
+        renderWidget = BSSRDFRenderWidget()
+        self.tabWidgets.addTab(renderWidget, 'Render')
+        renderWidget.startRendering(renderparams, self.project.bssrdf)
 
     @classmethod
     def showMessageBox(cls, msg):

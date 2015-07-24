@@ -56,8 +56,7 @@ class DepthEstimator(object):
 
         # Solve for depth
         self._solve_depth2()
-
-        sp.misc.imsave('depth_map.png', self.depth)
+        sp.misc.imsave('result/depth_map.png', self.depth)
 
     def save_mesh(self, filename):
         width = self.depth.shape[1]
