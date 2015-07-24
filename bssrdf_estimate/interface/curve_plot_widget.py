@@ -30,7 +30,7 @@ class CurvePlotWidget(QWidget):
         self.mplCanvas = MplCanvas()
         self.layout.addWidget(self.mplCanvas)
 
-    def setCurveData(self, Rd):
+    def setCurveData(self, bssrdf):
         colors = [ 'r', 'g', 'b' ]
         for i in range(3):
-            self.mplCanvas.axes.plot(Rd[i][0], Rd[i][1], colors[i])
+            self.mplCanvas.axes.plot(bssrdf.distances, bssrdf.colors[:,i], colors[i])

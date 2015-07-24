@@ -8,6 +8,7 @@ from itertools import product
 from random import *
 
 from .vector3d import Vector3D
+from .diffuse_bssrdf import DiffuseBSSRDF
 from .solvers import *
 
 IOR_VACCUM = 1.0
@@ -147,21 +148,13 @@ class BSSRDFEstimator(object):
 
         assert xx is not None, "Solution x is invalid"
 
-        self.save_curves('Rd_curve.dat', xx)
+        self.set_curves(xx)
 
-    def save_curves(self, filename, x):
-        self.Rd = []
-        if x.ndim == 2:
-            for i in range(3):
-                xs, ys = spline_interpolate(x[:,i])
-                self.Rd.append((xs, ys))
-        self.save_curves_sub(filename, self.Rd)
-
-    @classmethod
-    def save_curves_sub(cls, filename, Rd):
-        with open(filename, 'wb') as fp:
-            for i in range(3):
-                sz = len(Rd[i][0])
-                fp.write(struct.pack('i', sz))
-                fp.write(struct.pack('f' * sz, *Rd[i][0]))
-                fp.write(struct.pack('f' * sz, *Rd[i][1]))
+    def set_curves(self, xx):
+        self.bssrdf = DiffuseBSSRDF()
+        for i in range(3):
+            xs, ys = spline_interpolate(xx[:,i])
+            if i == 0:
+                self.bssrdf.distances = np.array(xs)
+                self.bssrdf.colors = np.zeros((self.bssrdf.distances.size, 3))
+            self.bssrdf.colors[:,i] = np.array(ys)

@@ -48,4 +48,3 @@ if (NOT MSVC)
 endif()
 
 add_subdirectory(submodules)
-add_subdirectory(native)

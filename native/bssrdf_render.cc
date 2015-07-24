@@ -9,10 +9,9 @@
 
 static PyObject* render(PyObject* self, PyObject* args) {
     int width, height, samplePerPixel, numPhotons;
-    double scale;
     PyArrayObject* npDistances;
     PyArrayObject* npColors;
-    if (!PyArg_ParseTuple(args, "iiiidOO", &width, &height, &samplePerPixel, &numPhotons, &scale, &npDistances, &npColors)) {
+    if (!PyArg_ParseTuple(args, "iiiiOO", &width, &height, &samplePerPixel, &numPhotons, &npDistances, &npColors)) {
         PyErr_SetString(PyExc_ValueError, "call with invalid arguments: render(width, height, spp, n_photons, distances, colors)");
         return NULL;
     }
@@ -28,7 +27,7 @@ static PyObject* render(PyObject* self, PyObject* args) {
     }
 
     const int numIntervals = npDistances->dimensions[0];
-    printf("# of intervals: %d", numIntervals);
+    printf("# of intervals: %d\n", numIntervals);
 
     std::vector<double> distances(numIntervals);
     std::vector<spica::Color> colors(numIntervals);
@@ -36,10 +35,10 @@ static PyObject* render(PyObject* self, PyObject* args) {
     float* distData = (float*)npDistances->data;
     float* colorData = (float*)npColors->data;
     for (int i = 0; i < numIntervals; i++) {
-        distances[i] = distData[i] / scale;
-        double r = colorData[i * 3 + 0] / (scale * scale);
-        double g = colorData[i * 3 + 1] / (scale * scale);
-        double b = colorData[i * 3 + 2] / (scale * scale);
+        distances[i] = distData[i];
+        const double r = colorData[i * 3 + 0];
+        const double g = colorData[i * 3 + 1];
+        const double b = colorData[i * 3 + 2];
         colors[i] = spica::Color(r, g, b);
     }
 
