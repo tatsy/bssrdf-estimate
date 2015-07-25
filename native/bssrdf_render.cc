@@ -49,7 +49,7 @@ static PyObject* render(PyObject* self, PyObject* args) {
     spica::BSSRDF bssrdf = spica::DiscreteBSSRDF::factory(1.3, distances, colors);
 
     spica::SubsurfaceSPPMRenderer renderer;
-    renderer.render(scene, camera, bssrdf, samplePerPixel, numPhotons, spica::QUASI_MONTE_CARLO);
+    renderer.render(scene, camera, bssrdf, samplePerPixel, numPhotons, spica::PSEUDO_RANDOM_TWISTER);
 
     Py_RETURN_NONE;
 }
