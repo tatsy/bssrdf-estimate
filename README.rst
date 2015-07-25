@@ -1,6 +1,6 @@
-****
+****************
 bssrdf-estimate
-****
+****************
 
 .. image:: https://travis-ci.org/tatsy/bssrdf-estimate.svg?branch=master
   :target: https://travis-ci.org/tatsy/bssrdf-estimate
@@ -106,7 +106,23 @@ You can load project file by pushing ``Load`` button. The project sample is as f
     <ettry type="mask">target_mask.png</entry>
   </content>
   
-The required files are two. One is input HDR (high-dynamic-range) image of Exposure .hdr format. The second one is binary mask image. You can find the sample files in `data <https://github.com/tatsy/bssrdf-estimate/tree/master/data>`_ folder.
+The required files are two. One is input HDR (high-dynamic-range) image of Exposure .hdr format. The second one is binary mask image. You can find the sample files in `sample <https://github.com/tatsy/bssrdf-estimate/tree/master/sample>`_ folder.
+
+=======
+Result
+=======
+
+------
+input
+------
+
+.. image:: https://raw.githubusercontent.com/tatsy/bssrdf-estimate/master/sample/milk_image.png
+
+-------
+result
+-------
+
+.. image:: https://raw.githubusercontent.com/tatsy/bssrdf-estimate/master/sample/render_image.png
 
 ========
 License
