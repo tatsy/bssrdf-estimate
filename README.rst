@@ -26,7 +26,7 @@ First, please install ``LAPACK`` and ``BLAS`` with ``apt-get``.
 
   $ sudo apt-get install liblapack-dev libblas-dev
 
-Second, please install required python modules. The modules list is stored in `requirements.txt <https://github.com/tatsy/bssrdf-estimate/blob/master/requirements.txt>`_, which you can install them with ``pip``. If you install them for global environment, please do not forget ``sudo``.
+Second, please install required python modules. The modules are listed in `requirements.txt <https://github.com/tatsy/bssrdf-estimate/blob/master/requirements.txt>`_, which you can install with ``pip``. When you install them to the global environment, please do not forget to add ``sudo``.
 
 .. code-block:: bash
 
@@ -40,14 +40,13 @@ So, please separately install ``Qt5``, ``SIP`` and ``PyQt5`` from following webs
 * http://www.riverbankcomputing.com/software/sip/download (for ``SIP``)
 * http://www.riverbankcomputing.com/software/pyqt/download5 (for ``PyQt5``)
 
-Next, please install `spica <https://github.com/tatsy/spica.git>`_ (a renderer package). ``spica`` can be easily built with ``cmake``. As ``spica`` is recorded as a submodule, you can install it with the following command.
+Next, please install `spica <https://github.com/tatsy/spica.git>`_ (a renderer package). ``spica`` can be easily built with ``cmake`` (ver. 3.0.0 or higher). As ``spica`` is recorded as a submodule, you can install it with the following command.
 
 .. code-block:: bash
 
   $ git submodule update --init --recursive
   $ cmake -DSPICA_BUILD_EXAMPLE=OFF -DSPICA_BUILD_TEST=OFF -DBUILD_SPICA_VIEWER=OFF -DENABLE_AVX=OFF .
   $ cmake --build .
-
 
 Finally, please run ``setup.py`` to finish installation. Again, please do not forget to add ``sudo`` when you install this package for your global environment.
 
@@ -60,17 +59,16 @@ Finally, please run ``setup.py`` to finish installation. Again, please do not fo
 Windows
 --------
 
-Installation for **Windows** is rather complicated due to the absense of package manager. Please follow the instruction below to complete the installation. Thanks.
+Installation for **Windows** is rather complicated due to absense of the package manager. Please follow the instruction below to complete the installation.
 
-First, please install required python modules from http://www.lfd.uci.edu/~gohlke/pythonlibs/. Modules necessary are listed below.
+First, please install required python modules from http://www.lfd.uci.edu/~gohlke/pythonlibs/. Required modules are listed below.
 
 * numpy
 * scipy
 * matplotlib
 * cvxopt
-* PyQt5
 
-For ``Qt5``, please visit https://www.qt.io/download-open-source/ to get web installer. After that get source files of ``SIP`` and ``PyQt5`` from following websites.
+As ``PyQt5`` is not provided in the website, please install ``Qt5``, ``SIP`` and ``PyQt5`` manually. For ``Qt5``, please visit https://www.qt.io/download-open-source/ to get web installer. After that get source files of ``SIP`` and ``PyQt5`` from following websites.
 
 * http://www.riverbankcomputing.com/software/sip/download (for ``SIP``)
 * http://www.riverbankcomputing.com/software/pyqt/download5 (for ``PyQt5``)
@@ -107,6 +105,8 @@ You can load project file by pushing ``Load`` button. The project sample is as f
     <entry type="image">target_image.hdr</entry>
     <ettry type="mask">target_mask.png</entry>
   </content>
+  
+The required files are two. One is input HDR (high-dynamic-range) image of Exposure .hdr format. The second one is binary mask image. You can find the sample files in `data <https://github.com/tatsy/bssrdf-estimate/tree/master/data>`_ folder.
 
 ========
 License
