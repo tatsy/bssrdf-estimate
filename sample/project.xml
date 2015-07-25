@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<content>
+	<entry type="image">milk_image.hdr</entry>
+	<entry type="render-params">
+		<param type="spp">64</param>
+		<param type="image-width">800</param>
+		<param type="photons">1000000</param>
+		<param type="image-height">600</param>
+		<param type="bssrdf-scale">0.07</param>
+	</entry>
+	<entry type="mask">milk_mask.png</entry>
+	<entry type="bssrdf">Rd_curve.dat</entry>
+</content>
