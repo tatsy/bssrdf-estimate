@@ -193,6 +193,8 @@ class LightEstimator(object):
                 rot = math.atan2(sy, sx)
                 rx = int(sx * math.cos(rot) - sy * math.sin(rot) + cx - clip_rect.x)
                 ry = int(sx * math.sin(rot) + sy * math.cos(rot) + cy - clip_rect.y)
+                rx = max(0, min(rx, clip_width - 1))
+                ry = max(0, min(ry, clip_height - 1))
 
                 rot_idx = int(l.phi * num_rot / (2.0 * math.pi))
                 while rot_idx < 0:

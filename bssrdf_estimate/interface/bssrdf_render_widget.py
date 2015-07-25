@@ -37,10 +37,13 @@ class BSSRDFRenderWidget(ImageWidget):
         self.renderThread = None
 
     def timerTick(self):
-        imagename = 'sss_sppm_%02d.bmp' % self.imageIndex
-        if imagename in os.listdir('.'):
-            img = sp.misc.imread(imagename) / 255.0
-            self.showImage(img)
+        basename = 'sss_sppm_%02d' % self.imageIndex
+        imagename = basename + '.bmp'
+        if imagename  in os.listdir('.'):
+            img = sp.misc.imread(imagename)
+            sp.misc.imsave('result/' + basename + '.png', img)
+            os.remove(imagename)
+            self.showImage(img / 255.0)
             self.imageIndex += 1
 
     def startRendering(self, render_params, bssrdf):

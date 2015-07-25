@@ -147,6 +147,7 @@ class MainWindow(QWidget):
 
         # Save BSSRDF file
         be.bssrdf.save(os.path.join(self.openedDirectory, 'Rd_curve.dat'))
+        self.bssrdf = be.bssrdf
         self.project.add_entry('bssrdf', 'Rd_curve.dat')
         self.project.overwrite()
         self.consoleOutput.emit('[INFO] Estimation is successfull finished!')
@@ -161,7 +162,7 @@ class MainWindow(QWidget):
             return
 
         sc = self.controlWidget.bssrdf_scale
-        self.project.bssrdf.scale(sc)
+        scaled_bssrdf = self.project.bssrdf.scaled(sc)
 
         w = self.controlWidget.width_value
         h = self.controlWidget.height_value
@@ -176,7 +177,7 @@ class MainWindow(QWidget):
         # Start rendering
         renderWidget = BSSRDFRenderWidget()
         self.tabWidgets.addTab(renderWidget, 'Render')
-        renderWidget.startRendering(renderparams, self.project.bssrdf)
+        renderWidget.startRendering(renderparams, scaled_bssrdf)
 
     @classmethod
     def showMessageBox(cls, msg):

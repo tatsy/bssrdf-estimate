@@ -41,9 +41,12 @@ class Project(object):
                                                       int(table['spp']),
                                                       int(table['photons']),
                                                       float(table['bssrdf-scale']))
+                self.entries[e.get('type')] = self.render_params
             else:
                 pass
-            self.entries[e.get('type')] = e.text
+
+            if e.get('type') != 'render-params':
+                self.entries[e.get('type')] = e.text
 
     def add_entry(self, key, val):
         self.entries[key] = val
@@ -72,6 +75,7 @@ class Project(object):
     @classmethod
     def serializeRenderParams(cls, doc, renderparams):
         if not isinstance(renderparams, RenderParameters):
+            print(renderparams)
             raise Exception('[ERROR] Render parameter is invalid!!')
 
         table = {

@@ -30,6 +30,8 @@ class DiffuseBSSRDF(object):
             fp.write(struct.pack('f' * sz, *self.colors[:,1]))
             fp.write(struct.pack('f' * sz, *self.colors[:,2]))
 
-    def scale(self, sc):
-        self.distances = self.distances / sc
-        self.colors = self.colors / (sc * sc)
+    def scaled(self, sc):
+        ret = DiffuseBSSRDF()
+        ret.distances = self.distances / sc
+        ret.colors    = self.colors / (sc * sc)
+        return ret
