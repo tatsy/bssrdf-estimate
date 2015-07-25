@@ -123,6 +123,7 @@ result
 -------
 
 .. image:: https://raw.githubusercontent.com/tatsy/bssrdf-estimate/master/sample/render_image.png
+   :width: 400 px
 
 ========
 License
