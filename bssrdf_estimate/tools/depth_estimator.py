@@ -124,10 +124,10 @@ class DepthEstimator(object):
 
     @classmethod
     def _reshape(cls, x, d=0):
-        if d == 0:
-            return (3.0 + (-6.0 + 4.0 * x) * x) * x
-        else:
-            return cls._reshape(cls._reshape(x, d-1))
+        f = lambda x: (3.0 + (-6.0 + 4.0 * x) * x) * x
+        for i in range(d):
+            x = f(x)
+        return x
 
     def _make_laplacian(self, width, height):
         rows = []

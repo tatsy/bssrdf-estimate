@@ -3,6 +3,8 @@
 
 #include <cmath>
 #include <cstdio>
+#include <vector>
+#include <algorithm>
 
 const double EPS = 1.0e-12;
 
@@ -17,7 +19,7 @@ static PyObject* bilateral_filter(PyObject* self, PyObject* args) {
     PyArrayObject* npOutput;
 
     if (!PyArg_ParseTuple(args, "Oddi", &npImage, &sigma_s, &sigma_c, &winsize)) {
-        PyErr_SetString(PyExc_ValueError, "call with invalid arguments: bilateral_filter(image, sigma_s, sigma_c)");
+        PyErr_SetString(PyExc_ValueError, "call with invalid arguments: bilateral_filter(image, sigma_s, sigma_c, winsize)");
         return NULL;
     }
 
@@ -47,6 +49,21 @@ static PyObject* bilateral_filter(PyObject* self, PyObject* args) {
     const double ss2 = 2.0 * sigma_s * sigma_s;
     const double sc2 = 2.0 * sigma_c * sigma_c;
 
+    // Compute exponential tables
+    std::vector<std::vector<double> > distTable(dd + 1, std::vector<double>(dd + 1, 0.0));
+    for (int dy = 0; dy <= dd; dy++) {
+        for (int dx = 0; dx <= dd; dx++) {
+            double d2 = dx * dx + dy * dy;
+            distTable[dy][dx] = exp(-d2 / ss2);
+        }
+    }
+
+    std::vector<double> colorTable(256, 0.0);
+    for (int di = 0; di < 256; di++) {
+        colorTable[di] = exp(- di * di / sc2);
+    }
+
+    // Filter iteration
     float* imdata = (float*)npImage->data;
     float* outdata = (float*)npOutput->data;
     for (int y = 0; y < height; y++) {
@@ -58,13 +75,14 @@ static PyObject* bilateral_filter(PyObject* self, PyObject* args) {
                     const int nx = x + dx;
                     const int ny = y + dy;
                     if (nx >= 0 && ny >= 0 && nx < width && ny < height) {
-                        const double wgt_s = exp(- (dx * dx + dy * dy) / ss2);
-                        double wgt_c = 0.0;
+                        const double wgt_s = distTable[std::abs(dy)][std::abs(dx)];
+                        double wgt_c = 1.0;
                         for (int d = 0; d < dim; d++) {
-                            double diff = imdata[(y * width + x) * dim + d] - imdata[(ny * width + nx) * dim + d];
-                            wgt_c += diff * diff;
+                            const double diff = imdata[(y * width + x) * dim + d] - imdata[(ny * width + nx) * dim + d];
+                            int di = (int)(255.0 * std::abs(diff));
+                            di = std::max(0, std::min(di, 255));
+                            wgt_c *= colorTable[di];
                         }
-                        wgt_c = exp(- wgt_c / sc2);
 
                         const double wgt = wgt_s * wgt_c;
                         for (int d = 0; d < dim; d++) {
