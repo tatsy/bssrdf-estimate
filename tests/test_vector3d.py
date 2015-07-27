@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import math
+
 try:
     import unittest2 as unittest
 except:
@@ -55,10 +57,38 @@ class Vector3DTest(unittest.TestCase):
         self.assertEqual(v.y * 2.0, u.y)
         self.assertEqual(v.z * 2.0, u.z)
 
-        w = u / 2.0
-        self.assertAlmostEqual(v.x, w.x)
-        self.assertAlmostEqual(v.y, w.y)
-        self.assertAlmostEqual(v.z, w.z)
+        u = 3.0 * v
+        self.assertEqual(v.x * 3.0, u.x)
+        self.assertEqual(v.y * 3.0, u.y)
+        self.assertEqual(v.z * 3.0, u.z)
+
+        w = v / 2.0
+        self.assertAlmostEqual(v.x / 2.0, w.x)
+        self.assertAlmostEqual(v.y / 2.0, w.y)
+        self.assertAlmostEqual(v.z / 2.0, w.z)
+
+        with self.assertRaises(Exception):
+            w = u / 0.0
+
+    def test_dot(self):
+        u = Vector3D(1.0, 2.0, 3.0)
+        v = Vector3D(2.0, 3.0, 4.0)
+        self.assertAlmostEqual(v.dot(u), 20.0)
+        self.assertEqual(u.dot(v), v.dot(u))
+
+    def test_norm_and_normalized(self):
+        u = Vector3D(1.0, 2.0, 3.0)
+        self.assertAlmostEqual(u.norm(), math.sqrt(14.0))
+
+        nrm = u.norm()
+        v = u.normalized()
+        self.assertAlmostEqual(u.x / nrm, v.x)
+        self.assertAlmostEqual(u.y / nrm, v.y)
+        self.assertAlmostEqual(u.z / nrm, v.z)
+
+        w = Vector3D()
+        with self.assertRaises(Exception):
+            w.normalized()
 
 if __name__ == '__main__':
     unittest.main()
