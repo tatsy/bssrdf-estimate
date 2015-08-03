@@ -146,9 +146,9 @@ class MainWindow(QWidget):
         self.tabWidgets.addTab(cpw, 'Curve')
 
         # Save BSSRDF file
-        be.bssrdf.save(os.path.join(self.openedDirectory, 'Rd_curve.dat'))
+        be.bssrdf.save(os.path.join(self.openedDirectory, 'diffuse_bssrdf.dat'))
         self.bssrdf = be.bssrdf
-        self.project.add_entry('bssrdf', 'Rd_curve.dat')
+        self.project.add_entry('bssrdf', 'diffuse_bssrdf.dat')
         self.project.overwrite()
         self.consoleOutput.emit('[INFO] Estimation is successfull finished!')
 

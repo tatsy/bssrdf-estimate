@@ -2,7 +2,7 @@
 
 ''' Polynomial fitting '''
 
-import functools
+from itertools import chain
 
 import numpy as np
 import scipy as sp
@@ -40,19 +40,20 @@ def spline_interpolate(p, n_div = 10):
 
     return xs, ys
 
-def lin_interp(a, b, n_div = 10):
+def linear_interpolation(a, b, n_div = 10):
     fun = lambda a, b, t: a * t + (1.0 - t) * b
     return [fun(a, b, i / n_div) for i in range(n_div)]
 
-def cubic_fitting(p):
+def cubic_fitting(ps):
     n_div = 5
 
-    x0 = p.copy()
-    p = [lin_interp(p[i], p[i+1], n_div) for i in range(len(p) - 1)]
-    p = np.array(functools.reduce(lambda a, b: a + b, p))
-    n = p.shape[0]
+    x0 = ps.copy()
 
-    def func(x, p = p):
+    # Linear interpolation
+    ps = map(lambda p0, p1: linear_interpolation(p0, p1, n_div), ps, ps[1:])
+    ps = np.array(list(chain(*ps)))
+
+    def func(x, ps = ps):
         w_d = 1.0
         w_p = 10.0
         w_s = 1.0e-4
@@ -60,29 +61,26 @@ def cubic_fitting(p):
         # Hermite interpolation
         _ , xs = spline_interpolate(x, n_div)
 
-        # Error between original
         cost = 0.0
-        for i in range(n):
-            cost += w_d * ((xs[i] - p[i]) ** 2.0)
+
+        # Error between original
+        cost += w_d * sum(map(lambda x, p: (x - p) ** 2.0, xs, ps))
 
         # Penalize increase
-        for i in range(n - 1):
-            gap = xs[i + 1] - xs[i]
-            if gap > 0.0:
-                cost += w_p * gap
-
-        # Penalize non-negativity
-        if xs[n - 1] < 0.0:
-            cost += w_p * abs(xs[n - 1])
+        cost += w_p * sum(map(lambda x0, x1: (x0 - x1) ** 2.0 if x0 - x1 < 0.0 else 0.0, xs, xs[1:]))
+        cost += w_p * xs[-1] * xs[-1] if xs[-1] < 0.0 else 0.0
 
         # Penalize smoothness
-        for i in range(1, n - 1):
-            ddf = xs[i - 1] - 2.0 * xs[i] + xs[i + 1]
-            cost += w_s * ddf
+        cost += w_s * sum(map(lambda x0, x1, x2: (x0 - 2.0 * x1 + x2) ** 2.0, xs, xs[1:], xs[2:]))
 
         return cost
 
-    opt = { 'maxiter': 2000 }
+    opt = { 'maxiter': 2000, 'disp': False }
     res = sp.optimize.minimize(func, x0, method='L-BFGS-B', options=opt)
+
+    if not res.success:
+        print('[ERROR] failed: %s' % res.message)
+    else:
+        print('[INFO] L-BFGS-B Success!!')
 
     return res.x

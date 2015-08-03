@@ -54,7 +54,7 @@ class BSSRDFEstimator(object):
         # Build up system of linear equations
         inv_pi = 1.0 / math.pi
         num_pixels = len(self.pixels)
-        dscale = NUM_BASES / (0.5 * (width + height))
+        dscale = 1.0 / max(width, height)
         A = np.zeros((num_pixels, NUM_BASES))
         for i in range(num_pixels):
             for k in range(num_pixels):
@@ -84,6 +84,7 @@ class BSSRDFEstimator(object):
         for i in range(num_pixels):
             bb[i,:] = self.pixels[i].color[:]
 
+        print(A.shape)
         self.solve_linear_system(A, bb)
 
     def extract_pixel_constraints(self, image, mask, depth):
@@ -101,19 +102,16 @@ class BSSRDFEstimator(object):
                 normal = Vector3D(-dx, -dy, 1.0).normalized()
                 ret.append(PixelConstraint(col, pos, normal))
 
-        max_const = 5000
+        max_const = 1000
         num_const = len(ret)
 
         if num_const > max_const:
             print('[INFO] Masked pixels are too many. Sample to reduce the number!')
-            temp = ret
-            ret = []
             for i in range(max_const):
                 r = randint(i, num_const - 1)
-                temp[i], temp[r] = temp[r], temp[i]
-            ret.append(temp[i])
+                ret[i], ret[r] = ret[r], ret[i]
 
-        return ret
+        return ret[:max_const]
 
     def translucent_shadowmap(self, lights):
         num_pixels = len(self.pixels)
